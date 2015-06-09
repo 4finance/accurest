@@ -306,7 +306,7 @@ class WiremockToDslConverterSpec extends Specification {
 	"method": "POST",
 	"url": "/test",
 	"bodyPatterns": [{
-		"equalTo": "{\\"property1\\":\\"abc\\",\\"property2\\":\\"2017-01\\",\\"property3\\":\\"666\\",\\"property4\\":1428566412}"
+		"equalToJson": "{\\"property1\\":\\"abc\\",\\"property2\\":\\"2017-01\\",\\"property3\\":\\"666\\",\\"property4\\":1428566412}"
 	}]
   },
   "response": {
@@ -427,7 +427,7 @@ class WiremockToDslConverterSpec extends Specification {
 				"url" : "/test",
 				"method" : "POST",
 				"bodyPatterns" : [ {
-				  "equalTo" : "{\\"pan\\":\\"4855141150107894\\",\\"expirationDate\\":\\"2017-01\\",\\"dcvx\\":\\"178\\"}"
+				  "equalToJson" : "{\\"pan\\":\\"4855141150107894\\",\\"expirationDate\\":\\"2017-01\\",\\"dcvx\\":\\"178\\"}"
 				} ]
 			  },
 			  "response" : {

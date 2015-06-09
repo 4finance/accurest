@@ -3,7 +3,6 @@ import groovy.transform.PackageScope
 import groovy.transform.TypeChecked
 import io.codearte.accurest.dsl.internal.ClientRequest
 import io.codearte.accurest.dsl.internal.Request
-import io.codearte.accurest.util.JsonConverter
 
 import java.util.regex.Pattern
 
@@ -38,19 +37,25 @@ class WiremockRequestStubStrategy extends BaseWiremockStubStrategy {
 		if (body == null) {
 			return [:]
 		}
-		if (containsRegex(body)) {
-			return [bodyPatterns: [[matches: parseBody(JsonConverter.transformValues(body, { it.toString() }))]]]
+        if (clientRequest?.body?.containsPattern) {
+            return [bodyPatterns: parseMatchesBody(body)]
 		}
-		return [bodyPatterns: [[equalTo: parseBody(body)]]]
+		return [bodyPatterns: [[equalToJson: parseBody(body)]]]
 	}
 
-	boolean containsRegex(Object bodyObject) {
-		String bodyString = bodyObject as String
-		return (bodyString =~ /\^.*\$/).find()
-	}
-
-	boolean containsRegex(Map map) {
-		return map.values().any { it instanceof Pattern }
+    private def parseMatchesBody(def responseBodyObject) {
+        def regexList = new ArrayList<>()
+        responseBodyObject.each { k, v ->
+            if (v instanceof List) {
+                v.each {
+                    regexList.addAll(parseMatchesBody((Map<String, Object>)it))
+                }
+            } else {
+                String regex = ".*${k}\":.?\"${v}\".*"
+                regexList.add([matches: regex]);
+            }
+        }
+        return regexList
 	}
 
 }
