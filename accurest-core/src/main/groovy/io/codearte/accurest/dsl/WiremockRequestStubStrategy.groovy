@@ -23,7 +23,7 @@ class WiremockRequestStubStrategy extends BaseWiremockStubStrategy {
 
 	private Map<String, Object> buildRequestContent(ClientRequest request) {
 		return ([method    : request?.method?.clientValue,
-		        headers   : buildClientRequestHeadersSection(request.headers)
+				headers   : buildClientRequestHeadersSection(request.headers)
 		] << appendUrl(request) << appendBody(request)).findAll { it.value }
 	}
 
@@ -37,25 +37,25 @@ class WiremockRequestStubStrategy extends BaseWiremockStubStrategy {
 		if (body == null) {
 			return [:]
 		}
-        if (clientRequest?.body?.containsPattern) {
-            return [bodyPatterns: parseMatchesBody(body)]
+		if (clientRequest?.body?.containsPattern) {
+			return [bodyPatterns: parseMatchesBody(body)]
 		}
 		return [bodyPatterns: [[equalToJson: parseBody(body)]]]
 	}
 
-    private def parseMatchesBody(def responseBodyObject) {
-        def regexList = new ArrayList<>()
-        responseBodyObject.each { k, v ->
-            if (v instanceof List) {
-                v.each {
-                    regexList.addAll(parseMatchesBody((Map<String, Object>)it))
-                }
-            } else {
-                String regex = ".*${k}\":.?\"${v}\".*"
-                regexList.add([matches: regex]);
-            }
-        }
-        return regexList
+	private def parseMatchesBody(def responseBodyObject) {
+		def regexList = new ArrayList<>()
+		responseBodyObject.each { k, v ->
+			if (v instanceof List) {
+				v.each {
+					regexList.addAll(parseMatchesBody((Map<String, Object>)it))
+				}
+			} else {
+				String regex = ".*${k}\":.?\"${v}\".*"
+				regexList.add([matches: regex]);
+			}
+		}
+		return regexList
 	}
 
 }

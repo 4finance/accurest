@@ -43,21 +43,21 @@ class BasicFunctionalSpec extends IntegrationSpec {
 			def generatedClientJsonStub = file(GENERATED_CLIENT_JSON_STUB).text
 			new JsonSlurper().parseText(generatedClientJsonStub) == new JsonSlurper().parseText("""
 {
-    "request": {
-        "method": "PUT",
-        "headers": {
-            "Content-Type": {
-                "equalTo": "application/json"
-            }
-        },
-        "url": "/api/12",
-        "bodyPatterns": [
-            { "equalToJson": "[{\\"text\\":\\"Gonna see you at Warsaw\\"}]" }
-        ]
-    },
-    "response": {
-        "status": 200
-    }
+	"request": {
+		"method": "PUT",
+		"headers": {
+			"Content-Type": {
+				"equalTo": "application/json"
+			}
+		},
+		"url": "/api/12",
+		"bodyPatterns": [
+			{ "equalToJson": "[{\\"text\\":\\"Gonna see you at Warsaw\\"}]" }
+		]
+	},
+	"response": {
+		"status": 200
+	}
 }
 """)
 	}
