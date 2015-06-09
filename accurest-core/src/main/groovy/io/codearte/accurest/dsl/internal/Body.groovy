@@ -13,6 +13,8 @@ import java.util.regex.Pattern
 @EqualsAndHashCode(includeFields = true)
 class Body extends DslProperty {
 
+	boolean containsPattern
+
 	private static final Pattern TEMPORARY_PATTERN_HOLDER = Pattern.compile('REGEXP>>(.*)<<')
 	private static final String JSON_VALUE_PATTERN_FOR_REGEX = 'REGEXP>>%s<<'
 
@@ -36,6 +38,8 @@ class Body extends DslProperty {
 
 	Body(GString bodyAsValue) {
 		super(extractValue(bodyAsValue, {it.clientValue}), extractValue(bodyAsValue, {it.serverValue}))
+		Object[] clientValues = getClientValues(bodyAsValue, {it.clientValue})
+		containsPattern = clientValues.find {it instanceof Pattern}
 	}
 
 	Body(DslProperty bodyAsValue) {
@@ -78,5 +82,9 @@ class Body extends DslProperty {
 			return value
 		})
 	}
-
+	
+	private static Object[] getClientValues(GString bodyAsValue, Closure valueProvider) {
+		bodyAsValue.values.collect { it instanceof DslProperty ? valueProvider(it) : it } as Object[]
+	}
+	
 }
